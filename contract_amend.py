@@ -2,8 +2,8 @@ import pdfplumber
 import tiktoken
 from llama_cpp import Llama
 from docx import Document
-
-
+from dotenv import load_dotenv
+import os
 
 def extract_text_from_pdf(pdf_path):
     text = ""
@@ -25,8 +25,10 @@ def chunk_text(text, max_tokens=3500):
     
     return chunks
 
-# Load DeepSeek 13B locally
-llm = Llama("/Users/sanketjadhav/models/Llama-3-8B-Instruct-GGUF-Q4_K_M.gguf",n_ctx=8192,verbose=True)
+# Load Llama 8B locally
+load_dotenv()
+llm_path = os.getenv("LLAMA_MODEL_PATH")
+llm = Llama(model_path=llm_path, n_ctx=4096)  # or higher if supported
 
 def amend_contract(chunk, user_request):
     prompt = f"""You are a legal contract editor AI. Carefully follow the instruction below to modify the contract clauses **only where required**.
